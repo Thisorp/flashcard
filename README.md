@@ -84,8 +84,6 @@ I hope you like it.
 </table>
 <p>Will add soon</p>
 
-## Video
-[![Demo Video](http://img.youtube.com/vi/BdAxVovGtYc/2.jpg)](https://www.youtube.com/watch?v=BdAxVovGtYc "Demo Video")
 
 ## Contributing
 
@@ -98,21 +96,13 @@ guidelines https://initialcommit.com/blog/git-commit-messages-best-practices
 Clone this repository and import into **Android Studio**
 
 ```bash
-git clone https://github.com/daominh-studio/quickmem.git
+git clone https://github.com/Thisorp/flashcard.git
 ```
 
-####  Download and install from [Release](https://github.com/daominh-studio/quick-mem/releases)
 
 ## Maintainers
 
-This project is mantained by:
 
-* [nqmgaming](https://github.com/nqmgaming)
-* [Daocon](https://github.com/Daocon)
-
-## License
-
-This project is licensed under the GPL-3.0 license - see the [LICENSE.md](LICENSE) file for details
 
 ## Acknowledgments
 
@@ -127,6 +117,4 @@ This project is licensed under the GPL-3.0 license - see the [LICENSE.md](LICENS
 * [And more...](https://developer.android.com/docs)
 
 ## Authors
-
-Nguyen Quang Minh
 # flashcard
