@@ -18,7 +18,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/ic_arrow_back"
-                app:title="Settings"/>
+                app:title="Cài đặt"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/personal_info_cl"

@@ -17,7 +17,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="Update email" />
+        app:title="Cập Nhật Email" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textIL"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:background="@drawable/round_edittext_setting_change"
-            android:hint="New email"
+            android:hint="Email mới"
             android:paddingLeft="@dimen/_15ssp" />
     </com.google.android.material.textfield.TextInputLayout>
 

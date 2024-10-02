@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.daominh.quickmem" />
+                  <option name="mobileSdkAppId" value="1:1001542464049:android:c88aa268e41d8456399b10" />
+                  <option name="projectId" value="daominh-studio" />
+                  <option name="projectNumber" value="1001542464049" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

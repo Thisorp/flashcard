@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
             android:id="@+id/share"
-            android:title="Share"
+            android:title="Chia sẻ"
             android:icon="@drawable/ic_share"/>
     <item
             android:id="@+id/add_set"
-            android:title="Add Flashcard"
+            android:title="Thêm FlashCard"
             android:icon="@drawable/ic_add"/>
     <item
             android:id="@+id/edit_folder"
-            android:title="Edit Folder"
+            android:title="Sửa thư mục"
             android:icon="@drawable/ic_edit"/>
     <item
             android:id="@+id/delete_folder"
-            android:title="Delete Folder"
+            android:title="Xoá thư mục"
             android:icon="@drawable/ic_delete"/>
 
 </menu>

@@ -22,7 +22,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:navigationIcon="@drawable/ic_arrow_back"
-                app:title="Class"/>
+                app:title="Lớp học"/>
 
         <TextView
                 android:id="@+id/class_name_tv"
