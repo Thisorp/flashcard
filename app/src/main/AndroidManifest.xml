@@ -17,91 +17,91 @@
             android:theme="@style/Theme.QuickMem"
             tools:targetApi="31">
         <activity
-                android:name=".ui.activities.learn.TrueFalseFlashCardsActivity"
+                android:name="com.kewwi.quickmem.ui.activities.learn.TrueFalseFlashCardsActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.set.AddFlashCardToClassActivity"
+                android:name="com.kewwi.quickmem.ui.activities.set.AddFlashCardToClassActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.group.EditClassActivity"
+                android:name="com.kewwi.quickmem.ui.activities.group.EditClassActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.group.AddMemberActivity"
+                android:name="com.kewwi.quickmem.ui.activities.group.AddMemberActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.learn.QuizFolderActivity"
+                android:name="com.kewwi.quickmem.ui.activities.learn.QuizFolderActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.set.EditFlashCardActivity"
+                android:name="com.kewwi.quickmem.ui.activities.set.EditFlashCardActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.set.ViewSetActivity"
+                android:name="com.kewwi.quickmem.ui.activities.set.ViewSetActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.search.ViewSearchActivity"
+                android:name="com.kewwi.quickmem.ui.activities.search.ViewSearchActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.classes.ViewClassActivity"
+                android:name="com.kewwi.quickmem.ui.activities.classes.ViewClassActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.set.AddFlashCardActivity"
+                android:name="com.kewwi.quickmem.ui.activities.set.AddFlashCardActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.folder.ViewFolderActivity"
+                android:name="com.kewwi.quickmem.ui.activities.folder.ViewFolderActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.learn.SelectDefineActivity"
+                android:name="com.kewwi.quickmem.ui.activities.learn.SelectDefineActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.profile.change.ChangePasswordActivity"
+                android:name="com.kewwi.quickmem.ui.activities.profile.change.ChangePasswordActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.profile.change.ChangeEmailActivity"
+                android:name="com.kewwi.quickmem.ui.activities.profile.change.ChangeEmailActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.profile.change.ChangeUsernameActivity"
+                android:name="com.kewwi.quickmem.ui.activities.profile.change.ChangeUsernameActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.folder.AddToFolderActivity"
+                android:name="com.kewwi.quickmem.ui.activities.folder.AddToFolderActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.group.AddToClassActivity"
+                android:name="com.kewwi.quickmem.ui.activities.group.AddToClassActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.learn.QuizActivity"
+                android:name="com.kewwi.quickmem.ui.activities.learn.QuizActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.learn.LearnActivity"
+                android:name="com.kewwi.quickmem.ui.activities.learn.LearnActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.profile.SettingsActivity"
+                android:name="com.kewwi.quickmem.ui.activities.profile.SettingsActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.profile.CoursesActivity"
+                android:name="com.kewwi.quickmem.ui.activities.profile.CoursesActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.create.CreateClassActivity"
+                android:name="com.kewwi.quickmem.ui.activities.create.CreateClassActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.create.CreateFolderActivity"
+                android:name="com.kewwi.quickmem.ui.activities.create.CreateFolderActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.create.CreateSetActivity"
+                android:name="com.kewwi.quickmem.ui.activities.create.CreateSetActivity"
                 android:exported="false"/>
         <activity
-                android:name=".ui.activities.MainActivity"
+                android:name="com.kewwi.quickmem.ui.activities.MainActivity"
                 android:exported="false"
                 android:windowSoftInputMode="adjustNothing"/>
         <activity
-                android:name=".ui.activities.auth.signup.SignUpActivity"
+                android:name="com.kewwi.quickmem.ui.activities.auth.signup.SignUpActivity"
                 android:exported="false"
                 android:theme="@style/AppBottomSheetDialogTheme"/>
         <activity
-                android:name=".ui.activities.auth.signin.SignInActivity"
+                android:name="com.kewwi.quickmem.ui.activities.auth.signin.SignInActivity"
                 android:exported="false"
                 android:windowSoftInputMode="adjustNothing"/>
         <activity
-                android:name=".ui.activities.auth.AuthenticationActivity"
+                android:name="com.kewwi.quickmem.ui.activities.auth.AuthenticationActivity"
                 android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

@@ -1,3 +1,3 @@
 # Link source code
 
-GitHub: [https://github.com/daominh-studio/quiz-flash-card](https://github.com/daominh-studio/quiz-flash-card)
+GitHub: [https://github.com/Thisorp/flashcard](https://github.com/Thisorp/flashcard)
