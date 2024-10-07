@@ -116,8 +116,10 @@ public class QMDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CLASSES_USERS);
         db.execSQL(CREATE_TABLE_CLASSES_FLASHCARDS);
         db.execSQL(CREATE_TABLE_FOLDERS_FLASHCARDS);
-
+        // admin12345@gmail.com - admin12345
         db.execSQL("INSERT INTO users VALUES('1','admin','admin12345@gmail.com','admin','41e5653fc7aeb894026d6bb7b2db7f65902b454945fa8fd65a6327047b5277fb','',0,'2023/11/19','2023/11/19',1)");
+//        db.execSQL("INSERT INTO users VALUES('3', 'newuser', 'newuser123@gmail.com', 'newuser123', 'd8578edf8458ce06fbc5bb76a58c5ca4a4c67f18','', 0, '2024/10/07', '2024/10/07', 1)");
+
     }
 
     @Override
