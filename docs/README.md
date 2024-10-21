@@ -29,11 +29,11 @@ Thật khó để có thể chọn một đề tài phù hợp cho dự án mộ
 
 ## 1.3. Backend: Node.js + ExpressJS + TypeScript (Module hóa)
 
-- [Link Forder Structure](docs/structures/BACKEND.md)
+- [Link Forder Structure](../docs/structures/BACKEND.md)
 
 ## 1.4. ConsoleApp: `C#`
 
-- [Link Forder Structure](docs/structures/LisConsoleApp.md)
+- [Link Forder Structure](../docs/structures/LisConsoleApp.md)
 
 # 2. System Operating Flow Description
 
