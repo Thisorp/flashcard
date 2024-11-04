@@ -27,22 +27,30 @@ import com.saadahmedsoft.popupdialog.Styles
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener
 import com.squareup.picasso.Picasso
 
+// Lớp ViewFolderActivity: Quản lý các hành động trong giao diện xem chi tiết thư mục,
+// như xem các flashcard trong thư mục,
+// sửa đổi hoặc xóa thư mục.
 class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
+    // Binding để liên kết logic với giao diện người dùng, folderDAO để thao tác với cơ sở dữ liệu thư mục
     private val binding by lazy { ActivityViewFolderBinding.inflate(layoutInflater) }
     private val folderDAO by lazy { FolderDAO(this) }
     private lateinit var adapter: SetFolderViewAdapter
 
+    // onCreate: Khởi tạo activity và thiết lập giao diện người dùng
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // Gọi các phương thức thiết lập toolbar, chi tiết thư mục, danh sách flashcard và nút học
+        setupToolbar()
         setupToolbar()
         setupFolderDetails()
         setupRecyclerView()
         setupLearnButton()
     }
 
+    // setupToolbar: Thiết lập thanh công cụ với nút quay lại
     private fun setupToolbar() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -51,6 +59,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         }
     }
 
+    // setupFolderDetails: Hiển thị thông tin chi tiết về thư mục và người dùng (tên, ảnh đại diện, số flashcard)
     @SuppressLint("SetTextI18n")
     private fun setupFolderDetails() {
         val id = intent.getStringExtra("id")
@@ -62,6 +71,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         binding.termCountTv.text = folderDAO.getAllFlashCardByFolderId(id).size.toString() + " flashcards"
     }
 
+    // setupRecyclerView: Hiển thị danh sách các flashcard trong thư mục
     @SuppressLint("NotifyDataSetChanged")
     private fun setupRecyclerView() {
         val id = intent.getStringExtra("id")
@@ -72,6 +82,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         adapter.notifyDataSetChanged()
     }
 
+    // setupLearnButton: Thiết lập nút để bắt đầu học các flashcard trong thư mục
     private fun setupLearnButton() {
         val id = intent.getStringExtra("id")
         binding.learnThisFolderBtn.setOnClickListener {
@@ -81,11 +92,12 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         }
     }
 
+    // onCreateOptionsMenu: Thiết lập menu để quản lý các hành động trong thư mục
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.vew_folder_menu, menu)
         return true
     }
-
+    // onOptionsItemSelected: Xử lý các lựa chọn trong menu (ví dụ: mở menu dưới dạng bottom sheet)
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.menu) {
             BottomSheetMenuDialogFragment.Builder(
@@ -98,26 +110,28 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         return super.onOptionsItemSelected(item)
     }
 
+    //Hiển thị và ghi log khi bottom sheet được hiển thị hoặc bị đóng
     override fun onSheetDismissed(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?, dismissEvent: Int) {
         Log.d("TAG", "onSheetDismissed: ")
     }
 
 
+    // onSheetItemSelected: Xử lý các lựa chọn từ bottom sheet (sửa, xóa, thêm flashcard, chia sẻ thư mục)
     @SuppressLint("SetTextI18n")
     override fun onSheetItemSelected(bottomSheet: BottomSheetMenuDialogFragment, item: MenuItem, `object`: Any?) {
         when (item.itemId) {
             R.id.edit_folder -> {
-                handleEditFolder()
+                handleEditFolder() // Sửa thư mục
             }
 
             R.id.delete_folder -> {
 
-                handleDeleteFolder()
+                handleDeleteFolder()// Xóa thư mục
 
             }
 
             R.id.add_set -> {
-                handleAddSet()
+                handleAddSet()// Thêm flashcard vào thư mục
 
             }
 
@@ -127,6 +141,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         }
     }
 
+    // handleAddSet: Mở màn hình thêm flashcard vào thư mục hiện tại
     private fun handleAddSet() {
         val id = intent.getStringExtra("id")
         val newIntent = Intent(this, AddFlashCardActivity::class.java)
@@ -134,6 +149,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         startActivity(newIntent)
     }
 
+    // handleDeleteFolder: Hiển thị popup xác nhận và xử lý xóa thư mục
     private fun handleDeleteFolder() {
         PopupDialog.getInstance(this)
             .setStyle(Styles.STANDARD)
@@ -145,6 +161,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
                 object : OnDialogButtonClickListener() {
                     override fun onPositiveClicked(dialog: Dialog?) {
                         super.onPositiveClicked(dialog)
+                        // Kiểm tra và xóa thư mục từ cơ sở dữ liệu
                         if (folderDAO.deleteFolder(intent.getStringExtra("id")) > 0L) {
                             PopupDialog.getInstance(this@ViewFolderActivity)
                                 .setStyle(Styles.SUCCESS)
@@ -180,13 +197,14 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
             )
     }
 
+    // handleEditFolder: Hiển thị dialog để sửa tên và mô tả thư mục, cập nhật dữ liệu trong cơ sở dữ liệu
     @SuppressLint("SetTextI18n")
     private fun handleEditFolder() {
 
         val builder = AlertDialog.Builder(this)
         val dialogBinding = DialogCreateFolderBinding.inflate(layoutInflater)
 
-        //set data
+        // Lấy dữ liệu thư mục hiện tại để hiển thị
         val id = intent.getStringExtra("id")
         val folder = folderDAO.getFolderById(id)
         dialogBinding.folderEt.setText(folder.name)
@@ -204,6 +222,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
             val name = dialogBinding.folderEt.text.toString()
             val description = dialogBinding.descriptionEt.text.toString()
 
+            // Kiểm tra tên thư mục, cập nhật cơ sở dữ liệu và giao diện
             if (name.isEmpty()) {
                 Toast.makeText(this, "Please enter folder name", Toast.LENGTH_SHORT).show()
             } else {
@@ -226,10 +245,12 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
 
     }
 
+    //Hiển thị và ghi log khi bottom sheet được hiển thị hoặc bị đóng
     override fun onSheetShown(bottomSheet: BottomSheetMenuDialogFragment, `object`: Any?) {
         Log.d("TAG", "onSheetShown: ")
     }
 
+    // onResume: Cập nhật danh sách flashcard và chi tiết thư mục khi quay lại màn hình
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
@@ -242,6 +263,7 @@ class ViewFolderActivity : AppCompatActivity(), BottomSheetListener {
         binding.setRv.adapter = adapter
         adapter.notifyDataSetChanged()
 
+        // Cập nhật lại chi tiết thư mục khi quay lại màn hình
         setupFolderDetails()
 
     }
