@@ -5,33 +5,32 @@ Thật khó để có thể chọn một đề tài phù hợp cho dự án mộ
 # Mục lục
 
 - [mục lục](#mục-lục)
-- [luồng dũ liệu](#luòng-dũ-liệu)
-  - [giao diện](#giao-diện)
-  - [Backend: java + kolin](#backend-java--kolin)
+- [Giao diện](#Giao-diện)
+- [Backend: java + kolin](#backend-java--kolin)
 - [Luồng hoạt động của hệ thống](#luồng-hoạt-động-của-hệ-thống)//
   - [Bảo mật và quản lý dữ liệu](#bảo-mật-và-quản-lý-dữ-liệu)//
 # 1. General structure of the project
 
 ```
 /LIS-Management-System
-├── console_app/                 # Console App (C# console app)
-├── backend/                     # Backend (Node.js + TypeScript)
-├── frontend/                    # Frontend (React + TypeScript)
+├── console_app/                 # Console App (Android Studio )
+├── backend/                     # Backend (java + Kolin)
+├── frontend/                    # Frontend (XML)
 ├── docs/                        # Tài liệu dự án
 └── README.md                    # Thông tin dự án và hướng dẫn sử dụng
 ```
 
 ## 1.1. [Benefits structure](../docs/structures/Benefits.md)
 
-## 1.2. Frontend: React + TypeScript
+## 1.2. Giao diện
 
 - [Link Forder Structure](../docs/structures/FRONTEND.md)
 
-## 1.3. Backend: Node.js + ExpressJS + TypeScript (Module hóa)
+## 1.3. Backend: java+kolin 
 
 - [Link Forder Structure](../docs/structures/BACKEND.md)
 
-## 1.4. ConsoleApp: `C#`
+## 1.4. ConsoleApp: Android Studio`
 
 - [Link Forder Structure](../docs/structures/LisConsoleApp.md)
 
