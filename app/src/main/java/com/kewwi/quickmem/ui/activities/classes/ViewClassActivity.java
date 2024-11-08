@@ -3,6 +3,7 @@ package com.kewwi.quickmem.ui.activities.classes;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentStatePagerAdapter;
@@ -28,34 +29,46 @@ import com.kennyc.bottomsheet.BottomSheetMenuDialogFragment;
 import com.saadahmedsoft.popupdialog.PopupDialog;
 import com.saadahmedsoft.popupdialog.Styles;
 import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+//File này quản lý Activity để hiển thị thông tin của một lớp học (Class)
+// và cung cấp các chức năng liên quan đến quản lý lớp,
+// như thêm thành viên, thêm flashcards, chỉnh sửa, xóa và rời lớp.
+
+
 public class ViewClassActivity extends AppCompatActivity {
-    private ActivityViewClassBinding binding;
-    private GroupDAO groupDAO;
-    int currentTabPosition = 0;
-    private String id;
-    private UserSharePreferences userSharePreference;
+    private ActivityViewClassBinding binding;// Binding layout XML
+    private GroupDAO groupDAO;// DAO để quản lý lớp học (Group)
+    int currentTabPosition = 0;// Vị trí tab hiện tại trong ViewPager
+    private String id;// ID của lớp học
+    private UserSharePreferences userSharePreference;// Lưu thông tin người dùng
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityViewClassBinding.inflate(getLayoutInflater());
         final View view = binding.getRoot();
-        setContentView(view);
+        setContentView(view);// Thiết lập view cho Activity này
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbar);// Thiết lập toolbar
+
+        // Quay lại khi bấm nút điều hướng
         binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
+        // Thiết lập adapter cho ViewPager để quản lý các tab
         MyViewClassAdapter myViewClassAdapter = new MyViewClassAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         binding.viewPager.setAdapter(myViewClassAdapter);
 
+// Thiết lập TabLayout với ViewPager
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
+        // Lắng nghe sự kiện khi chuyển tab
         binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                // Lưu vị trí tab hiện tại
                 currentTabPosition = tab.getPosition();
             }
 
@@ -70,34 +83,37 @@ public class ViewClassActivity extends AppCompatActivity {
             }
         });
 
+        // Xử lý làm mới dữ liệu khi người dùng kéo xuống
         binding.swipeRefreshLayout.setOnRefreshListener(() -> {
-            binding.swipeRefreshLayout.setRefreshing(false);
-            myViewClassAdapter.notifyDataSetChanged();
+            binding.swipeRefreshLayout.setRefreshing(false);// Tắt icon refresh
+            myViewClassAdapter.notifyDataSetChanged();// Cập nhật dữ liệu trong ViewPager
         });
 
     }
 
     @SuppressLint("SetTextI18n")
     private void setUpData() {
-        id = getIntent().getStringExtra("id");
-        groupDAO = new GroupDAO(this);
-        Group group = groupDAO.getGroupById(id);
-        binding.classNameTv.setText(group.getName());
-        binding.termCountTv.setText(groupDAO.getNumberFlashCardInClass(id) + " sets");
+        id = getIntent().getStringExtra("id");// Lấy ID lớp học từ Intent
+        groupDAO = new GroupDAO(this);// Khởi tạo DAO để thao tác với lớp học
+        Group group = groupDAO.getGroupById(id);// Lấy thông tin lớp học từ ID
+        binding.classNameTv.setText(group.getName());// Hiển thị tên lớp
+        binding.termCountTv.setText(groupDAO.getNumberFlashCardInClass(id) + " sets");// Hiển thị số lượng bộ thẻ trong lớp
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate menu cho Activity
         getMenuInflater().inflate(R.menu.menu_view_set, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Xử lý các hành động trong menu
         if (item.getItemId() == R.id.menu) {
             new BottomSheetMenuDialogFragment.Builder(this)
-                    .setSheet(R.menu.menu_view_class)
-                    .setTitle("Class")
+                    .setSheet(R.menu.menu_view_class)// Inflate menu từ file XML
+                    .setTitle("Class")// Tiêu đề cho BottomSheet
                     .setListener(new BottomSheetListener() {
                         @Override
                         public void onSheetShown(@NotNull BottomSheetMenuDialogFragment bottomSheetMenuDialogFragment, @Nullable Object o) {
@@ -106,10 +122,14 @@ public class ViewClassActivity extends AppCompatActivity {
 
                         @Override
                         public void onSheetItemSelected(@NotNull BottomSheetMenuDialogFragment bottomSheetMenuDialogFragment, @NotNull MenuItem menuItem, @Nullable Object o) {
+                            // Xử lý từng hành động dựa trên ID của menuItem được chọn
                             if (menuItem.getItemId() == R.id.add_member) {
+                                // Thêm thành viên vào lớp
                                 if (isOwner()) {
+                                    //Nếu người dùng là chủ lớp, cho phép thêm thành viên
                                     holderAddMember();
                                 } else {
+                                    // Hiển thị popup lỗi nếu không phải chủ lớp
                                     PopupDialog.getInstance(ViewClassActivity.this)
                                             .setStyle(Styles.FAILED)
                                             .setHeading("Error!")
@@ -125,9 +145,12 @@ public class ViewClassActivity extends AppCompatActivity {
                                             });
                                 }
                             } else if (menuItem.getItemId() == R.id.add_sets) {
+                                // Thêm flashcard vào lớp
                                 if (isOwner()) {
+                                    // Nếu là chủ lớp, cho phép thêm flashcard
                                     handleAddSets();
                                 } else {
+
                                     PopupDialog.getInstance(ViewClassActivity.this)
                                             .setStyle(Styles.FAILED)
                                             .setHeading("Error!")
@@ -144,8 +167,9 @@ public class ViewClassActivity extends AppCompatActivity {
                                 }
 
                             } else if (menuItem.getItemId() == R.id.edit_class) {
+                                // Chỉnh sửa lớp
                                 if (isOwner()) {
-                                    handleEditClass();
+                                    handleEditClass();// Nếu là chủ lớp, cho phép chỉnh sửa lớp
                                 } else {
                                     PopupDialog.getInstance(ViewClassActivity.this)
                                             .setStyle(Styles.FAILED)
@@ -163,6 +187,7 @@ public class ViewClassActivity extends AppCompatActivity {
                                 }
 
                             } else if (menuItem.getItemId() == R.id.delete_class) {
+                                //xóa lớp
                                 if (isOwner()) {
                                     handleDeleteClass();
                                 } else {
@@ -182,7 +207,9 @@ public class ViewClassActivity extends AppCompatActivity {
                                 }
 
                             } else if (menuItem.getItemId() == R.id.leave_class) {
+                                // rời khỏi lớp
                                 if (!isOwner()) {
+                                    // Nếu không phải chủ lớp, cho phép rời khỏi lớp
                                     PopupDialog.getInstance(ViewClassActivity.this)
                                             .setStyle(Styles.STANDARD)
                                             .setHeading("Are you sure?")
@@ -212,6 +239,7 @@ public class ViewClassActivity extends AppCompatActivity {
                                                                     }
                                                                 });
                                                     } else {
+
                                                         PopupDialog.getInstance(ViewClassActivity.this)
                                                                 .setStyle(Styles.FAILED)
                                                                 .setHeading("Error!")
@@ -235,6 +263,7 @@ public class ViewClassActivity extends AppCompatActivity {
                                                 }
                                             });
                                 } else {
+
                                     PopupDialog.getInstance(ViewClassActivity.this)
                                             .setStyle(Styles.FAILED)
                                             .setHeading("Error!")
@@ -257,27 +286,30 @@ public class ViewClassActivity extends AppCompatActivity {
 
                         }
                     })
-                    .setCloseTitle(getString(R.string.close))
-                    .setAutoExpand(true)
-                    .setCancelable(true)
+                    .setCloseTitle(getString(R.string.close))// Tiêu đề cho nút đóng BottomSheet
+                    .setAutoExpand(true)// Tự động mở rộng BottomSheet
+                    .setCancelable(true)// Cho phép hủy BottomSheet
                     .show(getSupportFragmentManager());
         }
         return super.onOptionsItemSelected(item);
     }
 
+    // Hàm thêm flashcard vào lớp
     private void handleAddSets() {
         Intent intent = new Intent(this, AddFlashCardToClassActivity.class);
-        intent.putExtra("flashcard_id", id);
-        startActivity(intent);
-        finish();
+        intent.putExtra("flashcard_id", id);// Gửi ID của lớp qua Activity thêm flashcard
+        startActivity(intent);// Bắt đầu Activity
+        finish();// Kết thúc Activity hiện tại
     }
 
+    // Hàm chỉnh sửa lớp học
     private void handleEditClass() {
         Intent intent = new Intent(this, EditClassActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
     }
 
+    // Hàm xóa lớp học
     private void handleDeleteClass() {
         PopupDialog.getInstance(this)
                 .setStyle(Styles.STANDARD)
@@ -331,6 +363,7 @@ public class ViewClassActivity extends AppCompatActivity {
                 });
     }
 
+    // Hàm thêm thành viên vào lớp
     private void holderAddMember() {
         Intent intent = new Intent(this, AddMemberActivity.class);
         intent.putExtra("id", id);
@@ -338,6 +371,7 @@ public class ViewClassActivity extends AppCompatActivity {
         finish();
     }
 
+    // Kiểm tra xem người dùng có phải chủ lớp hay không
     private boolean isOwner() {
         userSharePreference = new UserSharePreferences(this);
         String currentUserId = userSharePreference.getId();
@@ -347,6 +381,8 @@ public class ViewClassActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
+        // Khi Activity được khởi động lại (resume), dữ liệu sẽ được tải
+        // và hiển thị lại thông qua hàm setUpData()
         super.onResume();
         setUpData();
     }
