@@ -1,3 +1,6 @@
+// Tên file: UsersFragment.java
+// Chức năng chính: Fragment này hiển thị danh sách người dùng (ngoại trừ các tài khoản quản trị có role = 0) và cho phép tìm kiếm, lọc, cũng như đăng xuất tài khoản.
+// Cấu trúc bao gồm thiết lập RecyclerView để hiển thị người dùng, thêm chức năng tìm kiếm và thao tác đăng xuất với một cảnh báo xác nhận.
 package com.kewwi.quickmem.ui.fragments.manager;
 
 import android.annotation.SuppressLint;
@@ -25,19 +28,25 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UsersFragment extends Fragment {
+    // Sử dụng binding để liên kết layout XML với Fragment
     private FragmentUsersBinding binding;
+    // DAO để truy cập dữ liệu người dùng
     private UserDAO userDAO;
+    // Adapter để hiển thị danh sách người dùng
     private UsersAdapter usersAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Khởi tạo đối tượng DAO để truy cập dữ liệu người dùng
         userDAO = new UserDAO(requireActivity());
+        // Cho phép tùy chọn menu
         setHasOptionsMenu(true);
     }
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // Liên kết layout XML và trả về view gốc
         AppCompatActivity activity = (AppCompatActivity) getActivity();
         binding = FragmentUsersBinding.inflate(inflater, container, false);
         assert activity != null;
@@ -49,6 +58,7 @@ public class UsersFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Lấy danh sách người dùng (loại trừ tài khoản quản trị) và hiển thị trong RecyclerView
         List<User> listUsers = userDAO.getAllUser().stream().filter(user -> user.getRole() != 0).collect(Collectors.toList());
         binding.usersRv.setLayoutManager(new LinearLayoutManager(requireActivity(), RecyclerView.VERTICAL, false));
         usersAdapter = new UsersAdapter(requireActivity(), listUsers);
@@ -61,10 +71,12 @@ public class UsersFragment extends Fragment {
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
+        // Khởi tạo menu và thanh tìm kiếm người dùng
         MenuInflater inflater = requireActivity().getMenuInflater();
         inflater.inflate(R.menu.menu_setting_admin, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setQueryHint("Search users");
+        // Cài đặt chức năng tìm kiếm người dùng theo tên khi nhập văn bản
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) { return false; }
@@ -83,7 +95,9 @@ public class UsersFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // Xử lý sự kiện chọn mục từ menu
         if (item.getItemId() == R.id.log_out) {
+            // Hiển thị cảnh báo xác nhận trước khi đăng xuất
             new AlertDialog.Builder(requireContext())
                     .setTitle("Sign out")
                     .setMessage("Are you sure?")
@@ -98,6 +112,6 @@ public class UsersFragment extends Fragment {
                     .show();
             return true;
         }
-       return true;
+        return true;
     }
 }

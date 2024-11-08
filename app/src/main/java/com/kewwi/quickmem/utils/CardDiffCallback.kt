@@ -1,7 +1,11 @@
+// Tên file: CardDiffCallback.kt
+// Chức năng chính: CardDiffCallback là một lớp sử dụng để so sánh hai danh sách Card để xác định sự khác biệt giữa chúng.
+// Nó giúp RecyclerView cập nhật hiệu quả mà không cần phải tải lại toàn bộ danh sách, chỉ cập nhật những phần đã thay đổi.
 package com.kewwi.quickmem.utils
 
 import androidx.recyclerview.widget.DiffUtil
 import com.kewwi.quickmem.data.model.Card
+
 //định nghĩa một lớp `CardDiffCallback` dùng để so sánh sự khác nhau giữa hai danh sách `Card`.
 // Mục đích chính là tối ưu hóa việc cập nhật giao diện RecyclerView khi dữ liệu thay đổi bằng cách xác định các phần tử đã thay đổi,
 // thêm mới hoặc xóa bỏ.
@@ -14,9 +18,11 @@ class CardDiffCallback(
 ) : DiffUtil.Callback(
 ) {
     // Phương thức trả về kích thước của danh sách cũ.
+
     override fun getOldListSize(): Int {
         return oldList.size
     }
+
 
     // Phương thức trả về kích thước của danh sách mới.
     override fun getNewListSize(): Int {
@@ -25,13 +31,16 @@ class CardDiffCallback(
     // Phương thức kiểm tra xem hai phần tử ở vị trí tương ứng trong danh sách cũ
     // và mới có phải là cùng một đối tượng `Card` không.
     // So sánh dựa trên `id` của đối tượng `Card`.
+
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].id == newList[newItemPosition].id
     }
 
+
     // Phương thức kiểm tra xem nội dung của hai phần tử ở vị trí tương ứng trong danh sách cũ
     // và mới có giống nhau không.
     // So sánh toàn bộ đối tượng `Card`.
+
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition] == newList[newItemPosition]
     }
