@@ -10,40 +10,41 @@ import com.kewwi.quickmem.preferen.UserSharePreferences;
 import com.kewwi.quickmem.ui.activities.MainActivity;
 import com.kewwi.quickmem.ui.activities.auth.signin.SignInActivity;
 import com.kewwi.quickmem.ui.activities.auth.signup.SignUpActivity;
-
+// xử lý giao diện và logic cho activity liên quan đến xác thực người dùng ( đăng nhập & đăng ký)
 public class AuthenticationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //khởi tạo đối tượng lưu trữ thông tin chia sẻ của người dùng
         UserSharePreferences userSharePreferences = new UserSharePreferences(this);
 
-        // Assuming that userSharePreferences is initialized somewhere else
+        // kiểm tra nếu người dùng đã đăng nhập, chuyển hướng tới màn hình chính và kết thúc activity hiện tại
         if (userSharePreferences.getLogin()) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
         }
 
-        // Inflate the layout
+        // Inflate layout từ XML tương ứng với activity này
         ActivityAuthenticationBinding binding = ActivityAuthenticationBinding.inflate(getLayoutInflater());
         final View view = binding.getRoot();
         setContentView(view);
 
-        // Setup onboarding
+        // cài đặt Onboarding ( hứng dẫn sử dụng)
         OnboardingAdapter onboardingAdapter = new OnboardingAdapter(this);
-        binding.onboardingVp.setAdapter(onboardingAdapter);
-        binding.indicator.setViewPager(binding.onboardingVp);
+        binding.onboardingVp.setAdapter(onboardingAdapter);//gán adapter vào viewpager
+        binding.indicator.setViewPager(binding.onboardingVp);//gán indicator cho viewpager
 
-        // Setup sign up button
+        // cài đặt nút đăng ký
         binding.signUpBtn.setOnClickListener(v -> {
-            startActivity(new Intent(this, SignUpActivity.class));
+            startActivity(new Intent(this, SignUpActivity.class)); //chuyển đến đăng nhập
             finish();
         });
 
-        // Setup sign in button
+        // cài đặt sự kiện đăng nhập
         binding.signInBtn.setOnClickListener(v -> {
-            startActivity(new Intent(this, SignInActivity.class));
+            startActivity(new Intent(this, SignInActivity.class));//chuyển đến đăng ký
             finish();
         });
     }

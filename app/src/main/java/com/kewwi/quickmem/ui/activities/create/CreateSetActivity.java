@@ -42,13 +42,21 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+//Tạo và quản lý giao diện người dùng cho hoạt động tạo "set" flashcard mới.
+// Chức năng chính của file này bao gồm tạo, lưu và quản lý các thẻ ghi nhớ (cards) trong một set,
+// xử lý thao tác vuốt để xóa thẻ,
+// và hiển thị số lượng thẻ hiện tại.
 
+// Lớp CreateSetActivity là lớp quản lý giao diện người dùng
+// và các hành động liên quan đến việc tạo bộ thẻ flashcard.
 public class CreateSetActivity extends AppCompatActivity {
-    private CardAdapter cardAdapter;
-    private ArrayList<Card> cards;
-    private ActivityCreateSetBinding binding;
-    private final String id = genUUID();
+    private CardAdapter cardAdapter;// Adapter hiển thị danh sách thẻ ghi nhớ
+    private ArrayList<Card> cards;// Danh sách thẻ
+    private ActivityCreateSetBinding binding;// Liên kết giao diện người dùng với mã nguồn
+    private final String id = genUUID();// ID duy nhất của bộ thẻ
 
+
+    // Phương thức onCreate thiết lập giao diện khi hoạt động được tạo
     @SuppressLint("NotifyDataSetChanged")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +65,7 @@ public class CreateSetActivity extends AppCompatActivity {
         final View view = binding.getRoot();
         setContentView(view);
 
+        // Thiết lập giao diện, các hành động cho toolbar và danh sách thẻ.
         setupToolbar();
         setupSubjectEditText();
         setupDescriptionTextView();
@@ -66,17 +75,18 @@ public class CreateSetActivity extends AppCompatActivity {
         setupItemTouchHelper();
     }
 
+    // Thiết lập thanh công cụ và hành động quay lại
     private void setupToolbar() {
         setSupportActionBar(binding.toolbar);
         binding.toolbar.setNavigationOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
     }
-
+    // Thiết lập EditText để nhập tiêu đề cho bộ thẻ
     private void setupSubjectEditText() {
         if (binding.subjectEt.getText().toString().isEmpty()) {
             binding.subjectEt.requestFocus();
         }
     }
-
+    // Thiết lập hành động khi nhấp vào TextView mô tả, để hiện hoặc ẩn TextInputLayout
     private void setupDescriptionTextView() {
         binding.descriptionTv.setOnClickListener(v -> {
             if (binding.descriptionTil.getVisibility() == View.GONE) {
@@ -87,6 +97,7 @@ public class CreateSetActivity extends AppCompatActivity {
         });
     }
 
+    // Thiết lập danh sách thẻ và cập nhật số lượng thẻ
     private void setupCardsList() {
         //create list two set
         cards = new ArrayList<>();
@@ -95,10 +106,12 @@ public class CreateSetActivity extends AppCompatActivity {
         updateTotalCards();
     }
 
+    // Cập nhật số lượng thẻ hiện tại
     private void updateTotalCards() {
         binding.totalCardsTv.setText(String.format("Total Cards: %s", cards.size()));
     }
 
+    // Thiết lập adapter cho danh sách thẻ và cập nhật khi có thay đổi
     @SuppressLint("NotifyDataSetChanged")
     private void setupCardAdapter() {
         cardAdapter = new CardAdapter(this, cards);
@@ -109,6 +122,7 @@ public class CreateSetActivity extends AppCompatActivity {
 
     }
 
+    // Thiết lập nút "thêm" thẻ mới
     private void setupAddFab() {
         binding.addFab.setOnClickListener(v -> {
             if (!checkTwoCardsEmpty()) {
@@ -128,13 +142,14 @@ public class CreateSetActivity extends AppCompatActivity {
         });
     }
 
-
+    // Thiết lập thao tác vuốt để xóa thẻ
     private void setupItemTouchHelper() {
         ItemTouchHelper.SimpleCallback callback = createItemTouchHelperCallback();
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(binding.cardsLv);
     }
 
+    // Tạo callback cho thao tác vuốt
     private ItemTouchHelper.SimpleCallback createItemTouchHelperCallback() {
         return new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             @Override
@@ -154,18 +169,19 @@ public class CreateSetActivity extends AppCompatActivity {
         };
     }
 
+    // Xử lý khi một thẻ bị vuốt để xóa
     private void handleOnSwiped(RecyclerView.ViewHolder viewHolder) {
         int position = viewHolder.getBindingAdapterPosition();
 
-        // Backup of removed item for undo purpose
+        // Sao lưu thẻ bị xóa
         Card deletedItem = cards.get(position);
 
-        // Removing item from recycler view
+        // Xóa thẻ khỏi danh sách
         cards.remove(position);
         updateTotalCards();
         cardAdapter.notifyItemRemoved(position);
 
-        // Showing Snack bar with an Undo option
+        // Hiển thị thông báo Snack bar với tùy chọn "Hoàn tác"
         Snackbar snackbar = Snackbar.make(binding.getRoot(), "Item was removed from the list.", Snackbar.LENGTH_LONG);
         snackbar.setAction("UNDO", view -> {
 
@@ -183,6 +199,7 @@ public class CreateSetActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    // Xử lý vẽ lại giao diện khi vuốt thẻ
     private void handleOnChildDraw(@NotNull Canvas c, @NotNull RecyclerView.ViewHolder viewHolder, float dX) {
         Drawable icon = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_delete);
         View itemView = viewHolder.itemView;
@@ -191,7 +208,7 @@ public class CreateSetActivity extends AppCompatActivity {
         int iconTop = itemView.getTop() + (itemView.getHeight() - icon.getIntrinsicHeight()) / 2;
         int iconBottom = iconTop + icon.getIntrinsicHeight();
 
-        if (dX < 0) { // Swiping to the left
+        if (dX < 0) { // Vuốt sang trái
             int iconLeft = itemView.getRight() - iconMargin - icon.getIntrinsicWidth();
             int iconRight = itemView.getRight() - iconMargin;
             icon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
@@ -199,12 +216,13 @@ public class CreateSetActivity extends AppCompatActivity {
             final ColorDrawable background = new ColorDrawable(Color.WHITE);
             background.setBounds(itemView.getRight() + ((int) dX), itemView.getTop(), itemView.getRight(), itemView.getBottom());
             background.draw(c);
-        } else { // No swipe
+        } else { // Không vuốt
             icon.setBounds(0, 0, 0, 0);
         }
 
         icon.draw(c);
     }
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -212,6 +230,7 @@ public class CreateSetActivity extends AppCompatActivity {
 
     }
 
+    // Thiết lập menu khi tạo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_create_set, menu);
@@ -219,6 +238,7 @@ public class CreateSetActivity extends AppCompatActivity {
 
     }
 
+    // Xử lý khi chọn các mục trong menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.done) {
@@ -228,11 +248,12 @@ public class CreateSetActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
 
     }
-
+    // Lưu tất cả thay đổi sau khi tạo bộ thẻ
     private void saveChanges() {
         String subject = binding.subjectEt.getText().toString();
         String description = binding.descriptionEt.getText().toString();
 
+        // Kiểm tra nếu tiêu đề trống, yêu cầu nhập tiêu đề
         if (subject.isEmpty()) {
             binding.subjectTil.setError("Please enter subject");
             binding.subjectEt.requestFocus();
@@ -241,34 +262,40 @@ public class CreateSetActivity extends AppCompatActivity {
             binding.subjectTil.setError(null);
         }
 
+        // Lưu các thẻ, nếu lưu thất bại thì ngừng xử lý
         if (!saveAllCards()) {
             return;
         }
 
+        // Lưu flashcard, nếu thất bại thì thông báo lỗi
         if (!saveFlashCard(subject, description)) {
             Toast.makeText(this, "Insert flashcard failed", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Sau khi lưu thành công, chuyển sang màn hình xem bộ thẻ vừa tạo
         Intent intent = new Intent(this, ViewSetActivity.class);
         intent.putExtra("id", id);
         startActivity(intent);
         finish();
     }
 
+    // Lưu tất cả các thẻ trong danh sách
     private boolean saveAllCards() {
         for (Card card : cards) {
             if (!saveCard(card)) {
-                return false;
+                return false;// Nếu có bất kỳ thẻ nào không lưu được, trả về false
             }
         }
-        return true;
+        return true;// Tất cả thẻ được lưu thành công
     }
 
+    // Lưu một thẻ cụ thể
     private boolean saveCard(Card card) {
-        String front = card.getFront();
-        String back = card.getBack();
+        String front = card.getFront();// Lấy mặt trước của thẻ
+        String back = card.getBack();// Lấy mặt sau của thẻ
 
+        // Kiểm tra nếu mặt trước hoặc mặt sau của thẻ trống, yêu cầu nhập dữ liệu
         if (front == null || front.isEmpty()) {
             binding.cardsLv.requestFocus();
             Toast.makeText(this, "Please enter front", Toast.LENGTH_SHORT).show();
@@ -281,72 +308,84 @@ public class CreateSetActivity extends AppCompatActivity {
             return false;
         }
 
+        // Khởi tạo DAO và lưu thẻ vào cơ sở dữ liệu
         CardDAO cardDAO = new CardDAO(this);
         card.setId(genUUID());
         card.setFront(front);
         card.setBack(back);
-        card.setStatus(0);
-        card.setIsLearned(0);
-        card.setFlashcard_id(id);
-        card.setCreated_at(getCurrentDate());
-        card.setUpdated_at(getCurrentDate());
+        card.setStatus(0);// Đặt trạng thái mặc định
+        card.setIsLearned(0);// Đặt trạng thái chưa học
+        card.setFlashcard_id(id);// Gắn thẻ với ID bộ flashcard
+        card.setCreated_at(getCurrentDate());// Lấy ngày hiện tại
+        card.setUpdated_at(getCurrentDate());// Lấy ngày hiện tại
+
+        // Nếu việc lưu vào cơ sở dữ liệu thất bại, trả về false
         if (cardDAO.insertCard(card) <= 0) {
             Toast.makeText(this, "Insert card failed" + id, Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        return true;
+        return true;// Thẻ được lưu thành công
     }
 
+    // Lưu thông tin flashcard bao gồm tiêu đề và mô tả
     private boolean saveFlashCard(String subject, String description) {
         FlashCardDAO flashCardDAO = new FlashCardDAO(this);
         FlashCard flashCard = new FlashCard();
-        flashCard.setName(subject);
-        flashCard.setDescription(description);
+        flashCard.setName(subject);// Đặt tên flashcard
+        flashCard.setDescription(description);// Đặt mô tả
         UserSharePreferences userSharePreferences = new UserSharePreferences(this);
-        flashCard.setUser_id(userSharePreferences.getId());
-        flashCard.setCreated_at(getCurrentDate());
-        flashCard.setUpdated_at(getCurrentDate());
-        flashCard.setId(id);
+        flashCard.setUser_id(userSharePreferences.getId());// Lấy ID người dùng từ SharedPreferences
+        flashCard.setCreated_at(getCurrentDate()); // Lấy ngày hiện tại
+        flashCard.setUpdated_at(getCurrentDate());// Lấy ngày hiện tại
+        flashCard.setId(id);// Gắn ID bộ flashcard
+
+        // Xử lý thay đổi trạng thái riêng tư/công khai
         binding.privateSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 Toast.makeText(this, "Public", Toast.LENGTH_SHORT).show();
-                flashCard.setIs_public(1);
+                flashCard.setIs_public(1);// Đặt bộ thẻ ở trạng thái công khai
             } else {
                 Toast.makeText(this, "Private", Toast.LENGTH_SHORT).show();
-                flashCard.setIs_public(0);
+                flashCard.setIs_public(0);// Đặt bộ thẻ ở trạng thái riêng tư
             }
         });
 
+        // Lưu flashcard vào cơ sở dữ liệu, trả về true nếu thành công, false nếu thất bại
         return flashCardDAO.insertFlashCard(flashCard) > 0;
     }
 
+    // Lấy ngày hiện tại dưới dạng chuỗi, kiểm tra phiên bản API để định dạng ngày
     private String getCurrentDate() {
+        // Dành cho API mới
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             return getCurrentDateNewApi();
         } else {
-            return getCurrentDateOldApi();
+            return getCurrentDateOldApi();// Dành cho API cũ
         }
     }
 
+    // Kiểm tra nếu có ít nhất 2 thẻ trống (cả mặt trước và mặt sau đều trống)
     public boolean checkTwoCardsEmpty() {
         // check if 2 cards are empty return true
         int emptyCount = 0;
         for (Card card : cards) {
             if (card.getFront() == null || card.getFront().isEmpty() || card.getBack() == null || card.getBack().isEmpty()) {
-                emptyCount++;
+                emptyCount++;// Đếm số thẻ trống
                 if (emptyCount == 2) {
-                    return true;
+                    return true;// Nếu có ít nhất 2 thẻ trống, trả về true
                 }
             }
         }
-        return false;
+        return false;// Không có đủ 2 thẻ trống
     }
 
+    // Sinh UUID duy nhất cho các đối tượng
     private String genUUID() {
         return java.util.UUID.randomUUID().toString();
     }
 
+    // Định dạng ngày hiện tại cho API mới (từ Android O trở lên)
     @RequiresApi(api = Build.VERSION_CODES.O)
     private String getCurrentDateNewApi() {
         LocalDate currentDate = LocalDate.now();
@@ -354,6 +393,7 @@ public class CreateSetActivity extends AppCompatActivity {
         return currentDate.format(formatter);
     }
 
+    // Định dạng ngày hiện tại cho API cũ (dưới Android O)
     private String getCurrentDateOldApi() {
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");

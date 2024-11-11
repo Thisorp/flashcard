@@ -32,77 +32,81 @@ class QuizActivity : AppCompatActivity() {
         FlashCardDAO(this)
     }
 
-    private var progress = 0
-    private lateinit var correctAnswer: String
-    private val askedCards = mutableListOf<Card>()
-    private lateinit var id: String
-    private val job = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + job)
+    private var progress = 0 // Biến theo dõi tiến độ quiz
+    private lateinit var correctAnswer: String // Lưu câu trả lời đúng cho câu hỏi hiện tại
+    private val askedCards = mutableListOf<Card>() // Lưu các thẻ đã được hỏi
+    private lateinit var id: String // ID của bộ thẻ FlashCard
+    private val job = Job() // Job để quản lý Coroutine
+    private val scope = CoroutineScope(Dispatchers.Main + job) // CoroutineScope cho các hoạt động bất đồng bộ
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        id = intent.getStringExtra("id") ?: ""
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        id = intent.getStringExtra("id") ?: "" // Lấy ID bộ thẻ từ Intent
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)  // Hiển thị nút quay lại trong thanh công cụ
         binding.toolbar.setNavigationOnClickListener {
-            onBackPressedDispatcher.onBackPressed()
+            onBackPressedDispatcher.onBackPressed() // Quay lại khi nhấn nút quay lại
         }
-        setNextQuestion()
-        val max = cardDAO.getCardByIsLearned(id, 0).size
-        binding.timelineProgress.max = max
+        setNextQuestion() // Bắt đầu hiển thị câu hỏi đầu tiên
+        val max = cardDAO.getCardByIsLearned(id, 0).size // Lấy số lượng thẻ chưa học
+        binding.timelineProgress.max = max // Đặt giá trị tối đa cho tiến trình quiz
     }
 
+    // Phương thức kiểm tra câu trả lời và xử lý kết quả
     private fun checkAnswer(selectedAnswer: String, cardId: String): Boolean {
         return if (selectedAnswer == correctAnswer) {
-            correctDialog(correctAnswer)
+            correctDialog(correctAnswer)  // Hiển thị dialog khi trả lời đúng
             GlobalScope.launch(Dispatchers.IO) {
-                cardDAO.updateIsLearnedCardById(cardId, 1)
+                cardDAO.updateIsLearnedCardById(cardId, 1) // Cập nhật trạng thái thẻ là đã học
             }
-            setNextQuestion()
-            progress++
-            setUpProgressBar()
+            setNextQuestion() // Chuyển sang câu hỏi tiếp theo
+            progress++ // Tăng tiến trình quiz
+            setUpProgressBar() // Cập nhật thanh tiến độ
             true
         } else {
-            wrongDialog(correctAnswer, binding.tvQuestion.text.toString(), selectedAnswer)
-            setNextQuestion()
+            wrongDialog(correctAnswer, binding.tvQuestion.text.toString(), selectedAnswer) // Hiển thị dialog khi trả lời sai
+            setNextQuestion() // Chuyển sang câu hỏi tiếp theo
             false
         }
     }
 
+    // Cập nhật thanh tiến độ quiz
     private fun setUpProgressBar() {
-        binding.timelineProgress.progress = progress
-        Log.d("progresss", progress.toString())
+        binding.timelineProgress.progress = progress // Đặt giá trị tiến trình cho thanh tiến độ
+        Log.d("progresss", progress.toString()) // In ra giá trị tiến trình cho debugging
     }
 
 
+    // Phương thức để lấy câu hỏi tiếp theo
     @OptIn(DelicateCoroutinesApi::class)
     private fun setNextQuestion() {
         scope.launch {
-            val cards = cardDAO.getCardByIsLearned(id, 0) // get a list of cards that are not learned
-            val randomCard = cardDAO.getAllCardByFlashCardId(id) // get all cards
+            val cards = cardDAO.getCardByIsLearned(id, 0) // Lấy các thẻ chưa học
+            val randomCard = cardDAO.getAllCardByFlashCardId(id) // Lấy tất cả các thẻ của bộ thẻ
 
-            if (cards.isEmpty()) {
+            if (cards.isEmpty()) { // Nếu không còn thẻ nào chưa học, kết thúc quiz
                 finishQuiz()
                 return@launch
 
             }
 
-            val correctCard = cards.random() // get a random card from a list of cards that are not learned
-            randomCard.remove(correctCard) // remove the correct card from a list of all cards
+            val correctCard = cards.random() // Chọn ngẫu nhiên một thẻ chưa học
+            randomCard.remove(correctCard) // Loại bỏ thẻ đúng khỏi danh sách thẻ còn lại
 
-            val incorrectCards = randomCard.shuffled().take(3) // get 3 random cards from list of all cards
+            val incorrectCards = randomCard.shuffled().take(3) // Lấy ngẫu nhiên 3 thẻ sai từ danh sách còn lại
 
-            val allCards = (listOf(correctCard) + incorrectCards).shuffled() // shuffle 4 cards
-            val question = correctCard.front
-            correctAnswer = correctCard.back
+            val allCards = (listOf(correctCard) + incorrectCards).shuffled() // Trộn 4 thẻ (1 đúng + 3 sai)
+            val question = correctCard.front // Câu hỏi từ mặt trước của thẻ
+            correctAnswer = correctCard.back // Câu trả lời đúng từ mặt sau của thẻ
 
             withContext(Dispatchers.Main) {
-                binding.tvQuestion.text = question
+                binding.tvQuestion.text = question // Hiển thị câu hỏi
                 binding.optionOne.text = allCards[0].back
                 binding.optionTwo.text = allCards[1].back
                 binding.optionThree.text = allCards[2].back
                 binding.optionFour.text = allCards[3].back
 
+                // Đặt sự kiện cho các lựa chọn câu trả lời
                 binding.optionOne.setOnClickListener {
                     checkAnswer(binding.optionOne.text.toString(), correctCard.id)
                 }
@@ -119,13 +123,14 @@ class QuizActivity : AppCompatActivity() {
                     checkAnswer(binding.optionFour.text.toString(), correctCard.id)
                 }
 
-                askedCards.add(correctCard)
+                askedCards.add(correctCard) // Thêm thẻ đã hỏi vào danh sách đã hỏi
 
 
             }
         }
     }
 
+    // Kết thúc quiz và hiển thị thông báo
     private fun finishQuiz() { //1 quiz, 2 learn
         runOnUiThread {
 
@@ -141,20 +146,21 @@ class QuizActivity : AppCompatActivity() {
                     override fun onDismissClicked(dialog: Dialog?) {
                         super.onDismissClicked(dialog)
                         dialog?.dismiss()
-                        finish()
+                        finish() // Kết thúc activity quiz khi người dùng nhấn OK
                     }
                 })
         }
 
     }
 
+    // Hiển thị dialog khi trả lời đúng
     private fun correctDialog(answer: String) {
         val dialog = AlertDialog.Builder(this)
         val dialogBinding = DialogCorrectBinding.inflate(layoutInflater)
         dialog.setView(dialogBinding.root)
         dialog.setCancelable(true)
         val builder = dialog.create()
-        dialogBinding.questionTv.text = answer
+        dialogBinding.questionTv.text = answer // Hiển thị câu trả lời đúng
         dialog.setOnDismissListener {
             // startAnimations()
         }
@@ -164,17 +170,18 @@ class QuizActivity : AppCompatActivity() {
 
     }
 
+    // Hiển thị dialog khi trả lời sai
     private fun wrongDialog(answer: String, question: String, userAnswer: String) {
         val dialog = AlertDialog.Builder(this)
         val dialogBinding = DialogWrongBinding.inflate(layoutInflater)
         dialog.setView(dialogBinding.root)
         dialog.setCancelable(true)
         val builder = dialog.create()
-        dialogBinding.questionTv.text = question
-        dialogBinding.explanationTv.text = answer
-        dialogBinding.yourExplanationTv.text = userAnswer
+        dialogBinding.questionTv.text = question // Hiển thị câu hỏi
+        dialogBinding.explanationTv.text = answer // Hiển thị câu trả lời đúng
+        dialogBinding.yourExplanationTv.text = userAnswer // Hiển thị câu trả lời người dùng đã chọn
         dialogBinding.continueTv.setOnClickListener {
-            builder.dismiss()
+            builder.dismiss() // Đóng dialog khi người dùng nhấn "Tiếp tục"
         }
         builder.setOnDismissListener {
             //startAnimations()
@@ -182,6 +189,7 @@ class QuizActivity : AppCompatActivity() {
         builder.show()
     }
 
+    // Phương thức để thực hiện các hiệu ứng hoạt hình khi câu hỏi mới xuất hiện
     private fun startAnimations() {
         val views =
             listOf(
@@ -191,27 +199,28 @@ class QuizActivity : AppCompatActivity() {
                 binding.optionFour,
                 binding.tvQuestion
             )
-        val duration = 1000L
-        val endValue = -binding.optionOne.width.toFloat()
+        val duration = 1000L // Thời gian hoạt hình
+        val endValue = -binding.optionOne.width.toFloat() // Vị trí kết thúc của hoạt hình
 
+        // Áp dụng hoạt hình cho các lựa chọn câu trả lời
         views.forEach { view ->
             val animator = ObjectAnimator.ofFloat(view, "translationX", 0f, endValue)
             animator.duration = duration
             animator.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator) {
-                    view.translationX = 0f
+                    view.translationX = 0f // Đặt lại vị trí của view sau khi hoạt hình kết thúc
                     if (view == binding.optionFour) {
-                        setNextQuestion()
+                        setNextQuestion() // Chuyển sang câu hỏi tiếp theo khi hiệu ứng kết thúc
                     }
                 }
             })
-            animator.start()
+            animator.start() // Bắt đầu hiệu ứng
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        job.cancel()
+        job.cancel() // Hủy Coroutine job khi activity bị hủy
     }
 
 }
