@@ -622,13 +622,13 @@ public class ViewSetActivity extends AppCompatActivity {
         // Nếu người dùng là chủ sở hữu, hiển thị thông tin tiến trình học
         if (isUserOwner()) {
             // Nếu người dùng không phải là chủ sở hữu, hiển thị mặc định
-            binding.notLearnTv.setText("Not learned: " + notLearned);  // Hiển thị số thẻ chưa học
-            binding.isLearningTv.setText("Learning: " + learning);  // Hiển thị số thẻ đang học
-            binding.learnedTv.setText("Learned: " + learned);  // Hiển thị số thẻ đã học
+            binding.notLearnTv.setText("Chưa học: " + notLearned);  // Hiển thị số thẻ chưa học
+            binding.isLearningTv.setText("Đang học: " + learning);  // Hiển thị số thẻ đang học
+            binding.learnedTv.setText("Đã học: " + learned);  // Hiển thị số thẻ đã học
         } else {
-            binding.notLearnTv.setText("Not learned: " + cards.size());
-            binding.isLearningTv.setText("Learning: " + 0);
-            binding.learnedTv.setText("Learned: " + 0);
+            binding.notLearnTv.setText("Chưa học: " + cards.size());
+            binding.isLearningTv.setText("Đang học: " + 0);
+            binding.learnedTv.setText("Đã học: " + 0);
             // Ẩn các biểu tượng bên cạnh các số liệu
             binding.notLearnTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
             binding.isLearningTv.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);

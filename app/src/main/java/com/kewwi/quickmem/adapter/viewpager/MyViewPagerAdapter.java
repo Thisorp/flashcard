@@ -42,9 +42,9 @@ public class MyViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         //trả về tiêu đề tương ứng với vị trí
         return switch (position) {
-            case 0 -> "Study sets";//hiển thị tiêu đề "Study sets"
-            case 1 -> "Folders";//hiển thị tiêu đề "Folders"
-            case 2 -> "Classes";//hiển thị tiêu đề "Classes"
+            case 0 -> "THẺ HỌC";//hiển thị tiêu đề "Study sets"
+            case 1 -> "THƯ MỤC";//hiển thị tiêu đề "Folders"
+            case 2 -> "LỚP HỌC";//hiển thị tiêu đề "Classes"
             default -> "";//hiển thị tiêu đề rỗng
         };
     }
