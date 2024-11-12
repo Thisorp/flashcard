@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.kewwi.quickmem.databinding.FragmentProfileBinding;
 import com.kewwi.quickmem.preferen.UserSharePreferences;
 import com.kewwi.quickmem.ui.activities.profile.SettingsActivity;
+import com.kewwi.quickmem.ui.activities.profile.SettingsActivity;
 import com.squareup.picasso.Picasso;
 
 

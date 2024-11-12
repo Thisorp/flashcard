@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "1001542464049",
-    "project_id": "kewwi-studio",
-    "storage_bucket": "kewwi-studio.appspot.com"
+    "project_number": "311758102402",
+    "project_id": "taikhoan1-2e5d7",
+    "storage_bucket": "taikhoan1-2e5d7.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1001542464049:android:c88aa268e41d8456399b10",
+        "mobilesdk_app_id": "1:311758102402:android:72beca59a583bb5425799b",
         "android_client_info": {
           "package_name": "com.kewwi.quickmem"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "311758102402-re76dmcib7r5ltukeoho8ecome4j87qr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kewwi.quickmem",
+            "certificate_hash": "fa9944aea6e19a57ce908e4364f62571f49fda06"
+          }
+        },
+        {
+          "client_id": "311758102402-8cjarmcil0g258ag4rdfpl1s28pfat5p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAJzmdLzI_-A9AQ_8Vyrb6YpfaFXSEODFo"
+          "current_key": "AIzaSyDfS3dNqHhnWd-02opP9bv_Mpr8iKns_j4"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "311758102402-8cjarmcil0g258ag4rdfpl1s28pfat5p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

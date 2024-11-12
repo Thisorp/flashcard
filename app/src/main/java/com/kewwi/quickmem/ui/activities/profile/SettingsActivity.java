@@ -137,7 +137,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Xử lý khi người dùng nhấn nút xác nhận thay đổi email
         changeEmailBinding.submitChangeEmailBtn.setOnClickListener(v -> {
-//            startActivity(new Intent(SettingsActivity.this, ChangeEmailActivity.class));
+           startActivity(new Intent(SettingsActivity.this, ChangeEmailActivity.class));
 
             // Lấy thông tin người dùng từ Shared Preferences
             String password = changeEmailBinding.passwordEt.getText().toString().trim();
@@ -165,7 +165,8 @@ public class SettingsActivity extends AppCompatActivity {
         // Khởi tạo đối tượng DAO để truy xuất dữ liệu người dùng
         userDAO = new UserDAO(SettingsActivity.this);
         // Khởi tạo ViewBinding cho hộp thoại
-        DialogChangeUsernameBinding changeUsernameBinding = DialogChangeUsernameBinding.inflate(LayoutInflater.from(SettingsActivity.this));
+        DialogChangeUsernameBinding changeUsernameBinding =
+                DialogChangeUsernameBinding.inflate(LayoutInflater.from(SettingsActivity.this));
 
         View view = changeUsernameBinding.getRoot();
 
@@ -181,7 +182,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         // Xử lý khi người dùng nhấn nút xác nhận thay đổi tên
         changeUsernameBinding.submitChangeName.setOnClickListener(v -> {
-//           startActivity(new Intent(SettingsActivity.this, ChangeUsernameActivity.class));
+        startActivity(new Intent(SettingsActivity.this, ChangeUsernameActivity.class));
             String password = changeUsernameBinding.passwordEt.getText().toString().trim();// Lấy mật khẩu từ ô nhập liệu
             userSharePreferences = new UserSharePreferences(SettingsActivity.this); // Lấy thông tin người dùng từ Shared Preferences
             String id = userSharePreferences.getId();

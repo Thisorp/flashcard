@@ -7,16 +7,30 @@ import android.graphics.Color;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.google.android.gms.auth.api.identity.BeginSignInRequest;
+import com.google.android.gms.auth.api.identity.SignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.kewwi.quickmem.R;
 import com.kewwi.quickmem.data.dao.UserDAO;
 import com.kewwi.quickmem.data.model.User;
@@ -34,11 +48,27 @@ import com.saadahmedsoft.popupdialog.listener.OnDialogButtonClickListener;
 public class SignInActivity extends AppCompatActivity {
     private User user;
     private UserDAO userDAO;
+    private static final int RC_SIGN_IN = 9001;  // Mã yêu cầu cho Đăng nhập Google
+    private FirebaseAuth mAuth;
+    private GoogleSignInClient mGoogleSignInClient;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivitySigninBinding binding = ActivitySigninBinding.inflate(getLayoutInflater());
+
+        setContentView(binding.getRoot());
+
+        mAuth = FirebaseAuth.getInstance();
+
+        GoogleSignInOptions googleSignInOptions = new  GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
+        setupSocialSignIn(binding);
+
         View view = binding.getRoot();
         setContentView(view);
 
@@ -64,16 +94,75 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     //đăng nhập bằng mạng xã hội
-    private void setupSocialSignIn(ActivitySigninBinding binding) {
-        binding.googleBtn.setOnClickListener(v -> {
-            //intentToMain();
-            //tạm thời bị tắt
-        });
-        binding.facebookBtn.setOnClickListener(v -> {
-            //intentToMain();
-            //tạm thời bị tắt
-        });
+    public void setupSocialSignIn(ActivitySigninBinding binding) {
+        binding.googleBtn.setOnClickListener(v -> signInWithGoogle());
+
     }
+
+    private void signInWithGoogle() {
+        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                // Đăng nhập Google thành công, thực hiện xác thực với Firebase
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                if (account != null) {
+                    firebaseAuthWithGoogle(account.getIdToken());
+                } else {
+                    // Xử lý lỗi khi account là null
+                    Toast.makeText(SignInActivity.this, "Đăng nhập Google thất bại: không thể lấy thông tin tài khoản.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (ApiException e) {
+                // Đăng nhập Google thất bại, hiển thị thông báo lỗi
+                Log.w("GoogleSignIn", "Đăng nhập Google thất bại.", e);
+                Toast.makeText(SignInActivity.this, "Đăng nhập Google thất bại.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Đăng nhập thành công, cập nhật giao diện với thông tin người dùng
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // Đăng nhập thất bại, hiển thị thông báo
+                        Log.w("FirebaseAuth", "Xác thực với Firebase thất bại.", task.getException());
+                        Toast.makeText(SignInActivity.this, "Xác thực với Firebase thất bại.", Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                    }
+                });
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            // Nếu đăng nhập thành công, chuyển hướng đến MainActivity
+            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            Toast.makeText(this, "Đăng nhập thất bại. Hãy thử lại", Toast.LENGTH_SHORT).show();
+            // Nếu đăng nhập thất bại, hiển thị thông báo
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////
+
+//        binding.facebookBtn.setOnClickListener(v -> {
+//            //intentToMain();
+//            //tạm thời bị tắt
+//        });
+  // }
 
     //cài đặt cho thay đổi tài khoản và mật khẩu
     private void setupTextChangedListeners(ActivitySigninBinding binding) {
