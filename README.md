@@ -1,4 +1,4 @@
-## Quick - quick memory
+## QuickMem - quick memory
 
 It's an app learning by flashcard using Kotlin, Java, and SQLite.
 I use a lot of libraries to make it easy to use and make it more beautiful.
@@ -98,10 +98,21 @@ Clone this repository and import into **Android Studio**
 ```bash
 git clone https://github.com/Thisorp/flashcard.git
 ```
+Build Gradle
+```bash
+build gradle
+```
+## License
 
+This project is licensed under the GPL-3.0 license - see the [LICENSE.md](LICENSE) file for details
 
 ## Maintainers
 
+This project is mantained by:
+
+* [Thysorp](https://github.com/thisorp)
+* [Kewwi](https://github.com/cuddles47)
+* [Anhduy](https://github.com/Anhiu-0)
 
 
 ## Acknowledgments
@@ -117,4 +128,5 @@ git clone https://github.com/Thisorp/flashcard.git
 * [And more...](https://developer.android.com/docs)
 
 ## Authors
+
 # flashcard
