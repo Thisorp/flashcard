@@ -47,5 +47,6 @@ public class AuthenticationActivity extends AppCompatActivity {
             startActivity(new Intent(this, SignInActivity.class));//chuyển đến đăng ký
             finish();
         });
+
     }
 }

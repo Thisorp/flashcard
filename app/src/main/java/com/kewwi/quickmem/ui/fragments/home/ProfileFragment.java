@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import com.kewwi.quickmem.databinding.FragmentProfileBinding;
 import com.kewwi.quickmem.preferen.UserSharePreferences;
 import com.kewwi.quickmem.ui.activities.profile.SettingsActivity;
-import com.kewwi.quickmem.ui.activities.profile.SettingsActivity;
+import com.kewwi.quickmem.ui.activities.profile.FirebaseSettingActivity;
 import com.squareup.picasso.Picasso;
 
 
@@ -50,5 +50,10 @@ public class ProfileFragment extends Fragment {
 
         // Xử lý sự kiện khi nhấn nút cài đặt, điều hướng tới SettingsActivity
         binding.settingsBtn.setOnClickListener(view12 -> startActivity(new Intent(requireActivity(), SettingsActivity.class)));
+
+        // Xử lý sự kiện khi nhấn nút cài đặt, điều hướng tới SettingsActivity
+        binding.settingsBtn.setOnClickListener(view12 -> startActivity(new Intent(requireActivity(), FirebaseSettingActivity.class)));
+
+
     }
 }
