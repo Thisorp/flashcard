@@ -1,4 +1,4 @@
-#  Báo Cáo Kiểm Thử Nhóm 7  
+#  Báo Cáo Kiểm Thử Nhóm 7.  
 
 ---
 
