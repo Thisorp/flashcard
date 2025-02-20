@@ -214,4 +214,4 @@ Thực hiện thủ công bởi Duy Anh và Như Quỳnh, các tính năng ở v
 3. **Bảo mật:** Thêm kiểm thử bảo mật SQL injection, hiện chưa có và có thể bypass password authentication :D   
 
 --- 
-<h3 align="right">Người báo cáo: Nguyễn Minh Đức</h3>
+<h3 align="right">Người báo cáo: Nguyễn Minh Đức.</h3>
