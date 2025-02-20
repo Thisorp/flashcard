@@ -203,7 +203,7 @@ Thực hiện thủ công bởi Duy Anh và Như Quỳnh, các tính năng ở v
 - Blackbox Test: 25 trường hợp.  
 
 **Tỷ lệ thành công:** 100%.  
-**Phát hiện lỗi:** Không có lỗi nghiêm trọng được phát hiện. Có lỗi trong quá trình kiểm thử nhưng đã khắc phục luôn
+**Phát hiện lỗi:** Không có lỗi nghiêm trọng được phát hiện. Có lỗi trong quá trình kiểm thử nhưng đã khắc phục luôn.
 
 ---
 
