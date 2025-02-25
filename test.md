@@ -2,7 +2,7 @@
 
 ---
 
-#### **Tiêu đề:** Báo cáo Kiểm Thử Ứng Dụng Flashcard  
+#### **Tiêu đề:** Báo cáo Kiểm Thử Ứng Dụng Flashcard. 
 
 **Ngày thực hiện kiểm thử:** [01/11/2024]  
 **Người thực hiện kiểm thử:** [Nguyễn Minh Đức, Nguyễn Thị Như Quỳnh, Nguyễn Duy Anh]  
